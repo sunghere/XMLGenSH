@@ -1,114 +1,160 @@
 package src.ga.doblue.screen;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * Created by SungHere on 2017-09-08.
  */
 public class Screen extends JFrame {
 
-    private JFileChooser jfc;
-    private JPanel topPanel;
-    private JLabel jLabel;
-    private JTextField jf;
+	private JFileChooser jfc;
+	private JPanel topPanel;
+	private GridBagLayout gbl;
+	private GridBagConstraints gbc;
 
-    private JTextArea ja;
-    private JScrollPane jp;
+	private JLabel jLabel;
+	private JTextField jf;
 
-    private JButton geneBtn;
-    private JButton resetBtn;
-    private JButton findBtn;
-    private JButton clearBtn;
+	private JTextArea ja;
+	private JScrollPane jp;
 
+	private JButton geneBtn;
+	private JButton resetBtn;
+	private JButton findBtn;
+	private JButton clearBtn;
 
-    private JPanel leftPanel;
+	private JPanel leftPanel;
 
-    private ActionListener fileFind;
+	private ActionListener fileFind;
 
-    public void init() {
+	public void init() {
 
-        this.setName("McCube.XMLGeneSH");
-        this.setTitle("McCube.XMLGeneSH");
+		this.setName("McCube.XMLGeneSH");
+		this.setTitle("McCube.XMLGeneSH");
 
-        topPanel = new JPanel(new GridLayout(1, 0));
-        jLabel = new JLabel("경로 : ");
-        findBtn = new JButton("Find..");
+		gbl = new GridBagLayout();
+		topPanel = new JPanel(gbl);
 
-        findBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
-                    // showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
-                    jf.setText(jfc.getSelectedFile().toString());
-                }
+		gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH; // GridBagConstraints.fill: 컴포넌트의 디스플레이 영역이 컴포넌트가 요청한 크기보다 클 때,
+		// 크기설정을 다시 할 것인가를 결정합니다. GridBagConstraints 클래스는 다음과 같은 값을 가능한 값으로 제공해 주고 있습니다.
+		// ridBagConstraints.NONE: 디폴트 값
+		// GridBagConstraints.HORIZONTAL: 수평적으로 확장하고 수직적으로는 확장하지 않습니다.
+		// GridBagConstraints. VERTICAL: 수직적으로 확장하고 수평적으로는 확장하지 않습니다.
+		// GridBagConstraints.BOTH: 수평 및 수직으로 확장합니다.
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
 
-            }
-        });
-        jf = new JTextField();
-        jf.setEditable(false);
+		jLabel = new JLabel("경로 : ");
+		jLabel.setHorizontalAlignment(JLabel.CENTER);
+		findBtn = new JButton("Find..");
 
+		findBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
+					// showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
+					jf.setText(jfc.getSelectedFile().toString());
+				}
 
-        topPanel.add(jLabel);
-        topPanel.add(jf);
-        topPanel.add(findBtn);
+			}
+		});
+		jf = new JTextField("", 20);
+		jf.setEditable(false);
 
-        this.add(topPanel, BorderLayout.NORTH);
+		ScreenUtil.gridAdd(topPanel, gbl, gbc, jLabel, 0, 0, 1, 1);
+		ScreenUtil.gridAdd(topPanel, gbl, gbc, jf, 1, 0, 1, 1);
+		ScreenUtil.gridAdd(topPanel, gbl, gbc, findBtn, 2, 0, 1, 1);
+		// topPanel.add(findBtn);
 
-        //---------------파일선택
-        jfc = new JFileChooser();
-        jfc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("XML Document", ".xml"));
+		this.add(topPanel, BorderLayout.NORTH);
 
+		// ---------------파일선택
+		jfc = new JFileChooser();
+		jfc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel & XML Documents", "xml", "xls",
+				"xlsx", "xlsm", "xltx", "xlt"));
 
-        ja = new JTextArea();
-        jp = new JScrollPane(ja);
+		ja = new JTextArea();
+		jp = new JScrollPane(ja);
 
-        ja.setEditable(false);
-        this.add(jp);
+		ja.setEditable(false);
+		this.add(jp);
 
-        leftPanel = new JPanel();
+		leftPanel = new JPanel();
 
-        leftPanel.setLayout(new GridLayout(0, 1, 10, 20));
+		leftPanel.setLayout(new GridLayout(0, 1, 10, 20));
 
-        geneBtn = new JButton("변환");
+		geneBtn = new JButton("변환");
 
+		geneBtn.addActionListener(new ActionListener() {
 
-        resetBtn = new JButton("Reset");
-        resetBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+			private GeneratorThread generator;
 
-                jf.setText("");
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String path = Screen.this.jf.getText();
 
-        clearBtn = new JButton("Clear");
+				if (!path.equals("") && path != null) {
+					generator = new GeneratorThread(path, Screen.this.ja);
+					generator.run();
+				} else {
+					Screen.this.ja.append("경로 확인 불가\n");
+					if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
+						// showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
+						jf.setText(jfc.getSelectedFile().toString());
+					}
+				}
+			}
+		});
 
+		resetBtn = new JButton("Reset");
+		resetBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-        leftPanel.add(geneBtn);
-        leftPanel.add(resetBtn);
+				jf.setText("");
+			}
+		});
 
-        this.add(leftPanel, BorderLayout.EAST);
+		clearBtn = new JButton("Clear");
+		clearBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
+				ja.setText("");
+			}
+		});
+		leftPanel.add(geneBtn);
+		leftPanel.add(resetBtn);
+		leftPanel.add(clearBtn);
 
-    }
+		this.add(leftPanel, BorderLayout.EAST);
 
+	}
 
-    public Screen() {
-        setSize(400, 300);
+	public Screen() {
+		setSize(500, 300);
 
-        init();
+		init();
 
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ScreenUtil.setLocation(this);
+		this.setVisible(true);
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ScreenUtil.setLocation(this);
-
-        this.setVisible(true);
-
-    }
-
+	}
 
 }
