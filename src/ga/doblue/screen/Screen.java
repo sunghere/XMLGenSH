@@ -1,160 +1,176 @@
 package src.ga.doblue.screen;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 /**
  * Created by SungHere on 2017-09-08.
  */
 public class Screen extends JFrame {
 
-	private JFileChooser jfc;
-	private JPanel topPanel;
-	private GridBagLayout gbl;
-	private GridBagConstraints gbc;
 
-	private JLabel jLabel;
-	private JTextField jf;
+    private boolean setLive = false;
+    private Setting setting;
+    private JFileChooser jfc;
+    private JPanel topPanel;
+    private GridBagLayout gbl;
+    private GridBagConstraints gbc;
 
-	private JTextArea ja;
-	private JScrollPane jp;
+    private JLabel jLabel;
+    private JTextField jf;
 
-	private JButton geneBtn;
-	private JButton resetBtn;
-	private JButton findBtn;
-	private JButton clearBtn;
+    private JTextArea ja;
+    private JScrollPane jp;
 
-	private JPanel leftPanel;
+    private JButton geneBtn;
+    private JButton resetBtn;
+    private JButton findBtn;
+    private JButton clearBtn;
+    private JButton settingBtn;
 
-	private ActionListener fileFind;
+    private JPanel leftPanel;
+    private SettingScreen settingScreen;
 
-	public void init() {
+    private ActionListener fileFind;
 
-		this.setName("McCube.XMLGeneSH");
-		this.setTitle("McCube.XMLGeneSH");
 
-		gbl = new GridBagLayout();
-		topPanel = new JPanel(gbl);
+    public void setClose() {
+        this.setLive = false;
+    }
 
-		gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH; // GridBagConstraints.fill: 컴포넌트의 디스플레이 영역이 컴포넌트가 요청한 크기보다 클 때,
-		// 크기설정을 다시 할 것인가를 결정합니다. GridBagConstraints 클래스는 다음과 같은 값을 가능한 값으로 제공해 주고 있습니다.
-		// ridBagConstraints.NONE: 디폴트 값
-		// GridBagConstraints.HORIZONTAL: 수평적으로 확장하고 수직적으로는 확장하지 않습니다.
-		// GridBagConstraints. VERTICAL: 수직적으로 확장하고 수평적으로는 확장하지 않습니다.
-		// GridBagConstraints.BOTH: 수평 및 수직으로 확장합니다.
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
+    public void init() {
+        this.setName("McCube.XMLGeneSH");
+        this.setTitle("McCube.XMLGeneSH");
+        setting = Setting.getInstance();
+        gbl = new GridBagLayout();
+        topPanel = new JPanel(gbl);
 
-		jLabel = new JLabel("경로 : ");
-		jLabel.setHorizontalAlignment(JLabel.CENTER);
-		findBtn = new JButton("Find..");
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH; // GridBagConstraints.fill: 컴포넌트의 디스플레이 영역이 컴포넌트가 요청한 크기보다 클 때,
+        // 크기설정을 다시 할 것인가를 결정합니다. GridBagConstraints 클래스는 다음과 같은 값을 가능한 값으로 제공해 주고 있습니다.
+        // ridBagConstraints.NONE: 디폴트 값
+        // GridBagConstraints.HORIZONTAL: 수평적으로 확장하고 수직적으로는 확장하지 않습니다.
+        // GridBagConstraints. VERTICAL: 수직적으로 확장하고 수평적으로는 확장하지 않습니다.
+        // GridBagConstraints.BOTH: 수평 및 수직으로 확장합니다.
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
 
-		findBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
-					// showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
-					jf.setText(jfc.getSelectedFile().toString());
-				}
+        jLabel = new JLabel("경로 : ");
+        jLabel.setHorizontalAlignment(JLabel.CENTER);
+        findBtn = new JButton("Find..");
 
-			}
-		});
-		jf = new JTextField("", 20);
-		jf.setEditable(false);
+        findBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
+                    // showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
+                    jf.setText(jfc.getSelectedFile().toString());
+                }
 
-		ScreenUtil.gridAdd(topPanel, gbl, gbc, jLabel, 0, 0, 1, 1);
-		ScreenUtil.gridAdd(topPanel, gbl, gbc, jf, 1, 0, 1, 1);
-		ScreenUtil.gridAdd(topPanel, gbl, gbc, findBtn, 2, 0, 1, 1);
-		// topPanel.add(findBtn);
+            }
+        });
+        jf = new JTextField("", 20);
+        jf.setEditable(false);
 
-		this.add(topPanel, BorderLayout.NORTH);
+        ScreenUtil.gridAdd(topPanel, gbl, gbc, jLabel, 0, 0, 1, 1);
+        ScreenUtil.gridAdd(topPanel, gbl, gbc, jf, 1, 0, 1, 1);
+        ScreenUtil.gridAdd(topPanel, gbl, gbc, findBtn, 2, 0, 1, 1);
+        // topPanel.add(findBtn);
 
-		// ---------------파일선택
-		jfc = new JFileChooser();
-		jfc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel & XML Documents", "xml", "xls",
-				"xlsx", "xlsm", "xltx", "xlt"));
+        this.add(topPanel, BorderLayout.NORTH);
 
-		ja = new JTextArea();
-		jp = new JScrollPane(ja);
+        // ---------------파일선택
+        jfc = new JFileChooser();
+        jfc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel & XML Documents", "xml", "xls",
+                "xlsx", "xlsm", "xltx", "xlt"));
 
-		ja.setEditable(false);
-		this.add(jp);
+        ja = new JTextArea();
+        jp = new JScrollPane(ja);
 
-		leftPanel = new JPanel();
+        ja.setEditable(false);
+        this.add(jp);
 
-		leftPanel.setLayout(new GridLayout(0, 1, 10, 20));
+        leftPanel = new JPanel();
 
-		geneBtn = new JButton("변환");
+        leftPanel.setLayout(new GridLayout(0, 1, 10, 20));
 
-		geneBtn.addActionListener(new ActionListener() {
+        geneBtn = new JButton("Gene");
 
-			private GeneratorThread generator;
+        geneBtn.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String path = Screen.this.jf.getText();
+            private GeneratorThread generator;
 
-				if (!path.equals("") && path != null) {
-					generator = new GeneratorThread(path, Screen.this.ja);
-					generator.run();
-				} else {
-					Screen.this.ja.append("경로 확인 불가\n");
-					if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
-						// showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
-						jf.setText(jfc.getSelectedFile().toString());
-					}
-				}
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String path = Screen.this.jf.getText();
 
-		resetBtn = new JButton("Reset");
-		resetBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+                if (!path.equals("") && path != null) {
+                    generator = new GeneratorThread(path, Screen.this.ja);
+                    generator.run();
+                } else {
+                    Screen.this.ja.append("경로 확인 불가\n");
+                    if (jfc.showOpenDialog(Screen.this) == JFileChooser.APPROVE_OPTION) {
+                        // showopendialog 열기 창을 열고 확인 버튼을 눌렀는지 확인
+                        jf.setText(jfc.getSelectedFile().toString());
+                    }
+                }
+            }
+        });
 
-				jf.setText("");
-			}
-		});
 
-		clearBtn = new JButton("Clear");
-		clearBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+        resetBtn = new JButton("Reset");
+        resetBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-				ja.setText("");
-			}
-		});
-		leftPanel.add(geneBtn);
-		leftPanel.add(resetBtn);
-		leftPanel.add(clearBtn);
+                jf.setText("");
+            }
+        });
 
-		this.add(leftPanel, BorderLayout.EAST);
+        clearBtn = new JButton("Clear");
+        clearBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-	}
+                ja.setText("");
+            }
+        });
 
-	public Screen() {
-		setSize(500, 300);
 
-		init();
+        settingBtn = new JButton("Setting");
+        settingBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ScreenUtil.setLocation(this);
-		this.setVisible(true);
+                if (setLive) settingScreen.requestFocus();
+                else {
+                    settingScreen = new SettingScreen(Screen.this, setting);
+                    setLive=true;
+                }
 
-	}
+            }
+        });
+
+        leftPanel.add(geneBtn);
+        leftPanel.add(resetBtn);
+        leftPanel.add(clearBtn);
+        leftPanel.add(settingBtn);
+
+        this.add(leftPanel, BorderLayout.EAST);
+
+    }
+
+    public Screen() {
+        setSize(500, 300);
+
+        init();
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ScreenUtil.setLocation(this);
+        this.setVisible(true);
+
+    }
 
 }
