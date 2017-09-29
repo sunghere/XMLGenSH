@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.util.Vector;
 
 /**
@@ -13,11 +14,12 @@ public class SettingScreen extends JDialog {
 
     private static Setting setting;
     private JScrollPane sp;
-    private JPanel jpanel;
+    private JPanel btnPanel;
     private JTable listTable;
+    private JButton okBtn;
     private JButton addBtn;
-    private JButton insertBtn;
     private JButton deleteBtn;
+
     private Screen parent;
 
     @Override
@@ -42,6 +44,14 @@ public class SettingScreen extends JDialog {
     }
 
     private void init() {
+
+        btnPanel = new JPanel(new GridLayout(0, 3));
+
+        add(btnPanel, BorderLayout.NORTH);
+
+        btnPanel.add(okBtn);
+        btnPanel.add(addBtn);
+        btnPanel.add(deleteBtn);
 
         /* 컬럼 초기화*/
         Vector<String> tablecolum = new Vector<>();

@@ -1,5 +1,7 @@
 package src.ga.doblue.screen;
 
+import src.ga.doblue.gene.GeneratorThread;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
