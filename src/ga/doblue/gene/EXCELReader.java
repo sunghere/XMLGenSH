@@ -8,10 +8,13 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import src.ga.doblue.obj.McItem;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Vector;
 
 /**
  * Created by SungHere on 2017-09-29.
@@ -19,10 +22,9 @@ import java.util.LinkedHashMap;
 public class EXCELReader {
 
     String[] keyList = {"전문구분"};
-    private LinkedHashMap<String, String> common; // 공통부
     private static final String CMM_FLAG = "공통부 정보";
 
-    public static LinkedHashMap<String, String> xlsxRead(String path) throws IOException {
+    public static HashMap<String, Vector<McItem>> xlsxRead(String path) throws IOException {
         FileInputStream fis = new FileInputStream(path);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         int rowindex = 0;
@@ -71,11 +73,11 @@ public class EXCELReader {
             }
 
         }
-        LinkedHashMap<String, String> result = new LinkedHashMap<>();
+        HashMap<String, Vector<McItem>> result = new HashMap<>();
         return result;
     }
 
-    public static LinkedHashMap<String, String> xlsRead(String path) throws IOException {
+    public static HashMap<String, Vector<McItem>> xlsRead(String path) throws IOException {
         // 파일을 읽기위해 엑셀파일을 가져온다
         FileInputStream fis = new FileInputStream(path);
 
@@ -132,7 +134,7 @@ public class EXCELReader {
             }
 
         }
-        LinkedHashMap<String, String> result = new LinkedHashMap<>();
+        HashMap<String, Vector<McItem>> result = new HashMap<>();
 
         return result;
 

@@ -3,7 +3,7 @@ package src.ga.doblue.obj;
 /**
  * Created by SungHere on 2017-09-29.
  */
-public class McCompare {
+public class McCompare implements McItem {
 
     private String name;
     private int offset;

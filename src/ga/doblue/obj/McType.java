@@ -3,7 +3,7 @@ package src.ga.doblue.obj;
 /**
  * Created by SungHere on 2017-09-29.
  */
-public class McType {
+public class McType implements McItem {
 
     private String type;
     private int size;

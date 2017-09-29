@@ -5,7 +5,7 @@ import java.util.Vector;
 /**
  * Created by SungHere on 2017-09-29.
  */
-public class McField {
+public class McField implements McItem{
 
     Vector<McField> fields;
     private String id;
