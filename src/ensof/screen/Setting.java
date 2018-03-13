@@ -1,4 +1,4 @@
-package src.ga.doblue.screen;
+package ensof.screen;
 
 import java.util.HashMap;
 import java.util.Set;

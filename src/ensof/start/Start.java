@@ -1,6 +1,6 @@
-package src.ga.doblue.start;
+package ensof.start;
 
-import src.ga.doblue.screen.Screen;
+import ensof.screen.Screen;
 
 /**
  * Created by SungHere on 2017-09-08.

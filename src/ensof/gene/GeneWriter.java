@@ -1,9 +1,9 @@
-package src.ga.doblue.gene;
+package ensof.gene;
 
 import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import src.ga.doblue.obj.McItem;
+import ensof.obj.McItem;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,8 +22,6 @@ public class GeneWriter {
 
 
         StringBuilder content = new StringBuilder();
-
-
 
 
         FileWriter writer = new FileWriter(path + ".xml");

@@ -1,4 +1,4 @@
-package src.ga.doblue.screen;
+package ensof.screen;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

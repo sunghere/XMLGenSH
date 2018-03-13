@@ -1,6 +1,6 @@
-package src.ga.doblue.screen;
+package ensof.screen;
 
-import src.ga.doblue.gene.GeneratorThread;
+import ensof.gene.GeneratorThread;
 
 import javax.swing.*;
 import java.awt.*;

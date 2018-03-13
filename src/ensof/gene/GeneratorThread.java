@@ -1,10 +1,9 @@
-package src.ga.doblue.gene;
-
-import org.jdom.Element;
+package ensof.gene;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by SungHere on 2017-09-08.
@@ -18,6 +17,8 @@ public class GeneratorThread extends Thread {
     private boolean flag;
     private String flagStr;
     private ArrayList<String> cols = new ArrayList<String>(Arrays.asList(""));
+
+
 
     public GeneratorThread(String path, JTextArea area) {
         super();
