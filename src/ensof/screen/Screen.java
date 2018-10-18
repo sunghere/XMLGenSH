@@ -74,7 +74,7 @@ public class Screen extends JFrame {
             }
         });
         jf = new JTextField("", 20);
-        jf.setEditable(false);
+        jf.setEditable(true);
 
         ScreenUtil.gridAdd(topPanel, gbl, gbc, jLabel, 0, 0, 1, 1);
         ScreenUtil.gridAdd(topPanel, gbl, gbc, jf, 1, 0, 1, 1);
@@ -106,10 +106,22 @@ public class Screen extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (generator != null) {
+                    if (generator.isComplete_flag())
+                        generator = null;
+                    else {
+                        Screen.this.ja.append("작업중입니다..\n [" + generator.getPath() + "]");
+                    }
+                }
                 String path = Screen.this.jf.getText();
 
                 if (!path.equals("") && path != null) {
-                    generator = new GeneratorThread(path, Screen.this.ja);
+                    try {
+                        generator = new GeneratorThread(path, Screen.this.ja);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
                     generator.run();
                 } else {
                     Screen.this.ja.append("경로 확인 불가\n");
@@ -149,7 +161,7 @@ public class Screen extends JFrame {
                 if (setLive) settingScreen.requestFocus();
                 else {
                     settingScreen = new SettingScreen(Screen.this, setting);
-                    setLive=true;
+                    setLive = true;
                 }
 
             }

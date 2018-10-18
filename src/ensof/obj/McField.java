@@ -97,7 +97,7 @@ public class McField implements McItem {
     }
 
     public int getDepth() {
-        return depth;
+        return depth + 2;
     }
 
     public void setDepth(int depth) {
@@ -108,7 +108,7 @@ public class McField implements McItem {
         String tap = "\t";
         String result = "\t";
 
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < depth + 2; i++) {
             result += tap;
         }
         return result;
@@ -118,7 +118,7 @@ public class McField implements McItem {
     }
 
     public void setMemo(String memo) {
-        this.memo = memo;
+        this.memo = memo.replaceAll("\n", "");
     }
 
     public String getLength() {
@@ -152,16 +152,18 @@ public class McField implements McItem {
     @Override
     public String toString() {
 
+        if(name!=null && name.equals("공통")) return "";
+
         if (id.equals("common")) {
 
-            return getTap() + "<common name=\"" + name + "\"\t\t\t\t\t" + "vtype=\"" + vtype + "\"\t" + "value=\"" + value + "\"/>\n";
+            return getTap() + "<common name=\"" + name + "\"\t\t\t\t\t" + "vtype=\"" + vtype + "\"\t\t" + "value=\"" + value + "\"/>\n";
         } else if (id.equals("field")) {
-            return getTap() + "<field name=\"" + name + "\"\t\t\t\t\ttype=\"" + type + "(" + length + ")" + "\"\tnullable=\"true\"\t\tvtype=\"PCDATA\"\tMEMO=\"" + memo + "\"/>\n";
+            return getTap() + "<field name=\"" + name + "\"\t\t\t\t\ttype=\"" + type + "(" + length + ")" + "\"\tnullable=\"true\"\t\tvtype=\"PCDATA\"\t\tMEMO=\"" + memo + "\"/>\n";
 
         } else if (id.equals("arr")) {
             StringBuilder sb = new StringBuilder();
 
-            sb.append(getTap() + "<field name=\"" + name + "\"\t\t\t\t\ttype=\"" + type + "(" + length + ")" + "\"\t\t\tnullable=\"" + nullable + "\"\tMEMO=\""+ memo + "\">\n");
+            sb.append(getTap() + "<field name=\"" + name + "\"\t\t\t\t\ttype=\"" + type + "(" + length + ")" + "\"\tMIN=\"" + length + "\"\t MAX=\"" + length + "\"" + "\t\t\tnullable=\"" + nullable + "\"\t\tMEMO=\"" + memo + "\">\n");
 
 
             for (McField temp : fields) {
