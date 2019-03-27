@@ -1,10 +1,8 @@
 package ensof.gene;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
+import ensof.screen.Screen;
+
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,13 +13,9 @@ import java.util.Arrays;
 public class GeneratorThread extends Thread {
 
     private boolean complete_flag = true;
-    private JTextArea area;
     private String path;
-    private String exName;
-    private boolean flag;
-    private String flagStr;
+    private String orgName;
     private ArrayList<String> cols = new ArrayList<String>(Arrays.asList(""));
-    private PrintStream printStream;
 
     public boolean isComplete_flag() {
         return complete_flag;
@@ -32,17 +26,13 @@ public class GeneratorThread extends Thread {
         return path;
     }
 
-    public GeneratorThread(String path, JTextArea area) throws Exception {
+    public GeneratorThread(String path,String orgName) throws Exception {
         super();
-        this.area = area;
-        File file = new File(path.substring(0, path.lastIndexOf("\\")) + "/result.txt");
-        printStream = new PrintStream(new FileOutputStream(file));
-        System.setOut(printStream);
-        System.setErr(printStream);
-        area.append("경로 확인 [" + path + "]\n");
+       Screen.println("경로 확인 [" + path + "]");
+        Screen.println("변환 시작..."+"<orgCode : "+orgName+">");
 
-        area.append("변환 시작...\n");
         this.path = path;
+        this.orgName = orgName;
 
     }
 
@@ -53,32 +43,30 @@ public class GeneratorThread extends Thread {
         String exName = path.substring(path.lastIndexOf(".")); // 확장자명
 
         if (exName.length() < 2) {
-            area.append("Error 1 : 식별 오류\n ");
+            Screen.println("Error 1 : 식별 오류 ");
         } else if (exName.equals(".xls")) {
             try {
                 HanaBancaExcelReader.xlsRead(path);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                area.append("Error 0 : 경로 재확인\n ");
+                Screen.println(e);
+                Screen.println("Error 0 : 경로 재확인 ");
             }
         } else if (exName.equals(".xlsx")) {
             try {
-                xlsxLoading();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                area.append("Error 0 : 경로 재확인\n ");
+                EXCELReader.setWorkOrgName(orgName);
+                EXCELReader.xlsxRead(path);
+            } catch (Exception e) {
+                Screen.println(e);
+                Screen.println("Error 0 : 경로 재확인 ");
             }
         } else {
-            area.append("Error 3 : 지원 불가능한 확장자. \n");
+            Screen.println("Error 3 : 지원 불가능한 확장자.");
         }
-        if (printStream != null)
-            printStream.close();
-        area.append("Success! \n");
+        Screen.println("Complete.");
         complete_flag=true;
     }
 
 
-    public void xlsxLoading() throws IOException {
 
-    }
 }

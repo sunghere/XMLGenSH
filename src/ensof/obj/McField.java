@@ -96,10 +96,6 @@ public class McField implements McItem {
         this.id = id;
     }
 
-    public int getDepth() {
-        return depth + 2;
-    }
-
     public void setDepth(int depth) {
         this.depth = depth;
     }
@@ -167,6 +163,7 @@ public class McField implements McItem {
 
 
             for (McField temp : fields) {
+                temp.setDepth(depth+1);
                 sb.append(temp);
 
             }

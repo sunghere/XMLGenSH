@@ -32,12 +32,15 @@ public class ScreenUtil {
 
     }
 
-    public static void generatorXML(String path, JTextArea area) {
-
+    public static void generatorXML(String path, String orgName) {
+        Thread geneThread=null;
         try {
-            Thread geneThread = new GeneratorThread(path, area);
+            geneThread = new GeneratorThread(path, orgName);
+            geneThread.start();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if(geneThread !=null) geneThread.interrupt();
         }
 
     }
